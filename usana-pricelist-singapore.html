@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USANA Pricelist - Singapore</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .grand-total-bar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 2em;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .grand-total-bar .label {
+            font-size: 1em;
+            letter-spacing: 1px;
+        }
+
+        .grand-total-bar .amount {
+            font-size: 1.3em;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .controls-bar {
+            padding: 25px 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .reset-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+        }
+
+        .reset-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .table-container {
+            padding: 30px 40px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.15em;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: sticky;
+            top: 95px;
+            z-index: 50;
+        }
+
+        th {
+            padding: 22px 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.15em;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        th.item-col {
+            width: 100px;
+            text-align: center;
+        }
+
+        th.qty-col, th.price-col, th.total-col {
+            text-align: center;
+            width: 150px;
+        }
+
+        td {
+            padding: 20px 18px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tbody tr {
+            transition: all 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8f9ff;
+            transform: scale(1.002);
+        }
+
+        .item-number {
+            text-align: center;
+            font-weight: 700;
+            color: #6c757d;
+            font-size: 1.05em;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.05em;
+            line-height: 1.4;
+        }
+
+        .qty-input {
+            width: 90px;
+            padding: 14px;
+            font-size: 1.3em;
+            text-align: center;
+            border: 3px solid #e9ecef;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: white;
+        }
+
+        .qty-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+            background: #f8f9ff;
+        }
+
+        .qty-input:hover {
+            border-color: #667eea;
+        }
+
+        .qty-input.has-value {
+            background: #e7f3ff;
+            border-color: #667eea;
+        }
+
+        .price, .subtotal {
+            font-weight: 700;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .price {
+            color: #667eea;
+        }
+
+        .subtotal {
+            color: #f5576c;
+            font-size: 1.3em;
+        }
+
+        .subtotal.has-value {
+            animation: pulse 0.3s ease-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 30px;
+            color: #6c757d;
+            font-size: 1.3em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .grand-total-bar {
+                font-size: 1.4em;
+                flex-direction: column;
+                gap: 10px;
+                padding: 20px;
+            }
+
+            .controls-bar {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 1em;
+            }
+
+            th, td {
+                padding: 14px 10px;
+            }
+
+            .qty-input {
+                width: 70px;
+                font-size: 1.1em;
+            }
+
+            .item-col {
+                display: none;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        .info-banner {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe4cc 100%);
+            padding: 20px 40px;
+            border-bottom: 2px solid #ff9933;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-banner .icon {
+            font-size: 2em;
+        }
+
+        .info-banner .text {
+            flex: 1;
+            color: #8b5a00;
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+
+        .info-banner .text strong {
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 USANA Health Sciences</h1>
+            <p>Singapore Pricelist</p>
+            <div class="subtitle">Price effective 3 January 2026 | Prices include 9% GST</div>
+        </div>
+
+        <div class="info-banner">
+            <div class="icon">💰</div>
+            <div class="text">
+                <strong>Preferred Prices shown below.</strong> Subscribe & Save price is 10% less than the Preferred Price shown.
+            </div>
+        </div>
+
+        <div class="grand-total-bar">
+            <span class="label">GRAND TOTAL:</span>
+            <span class="amount" id="grandTotal">$0.00</span>
+        </div>
+
+        <div class="controls-bar">
+            <button class="reset-btn" onclick="resetQuantities()">🔄 Reset All</button>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search products..." oninput="filterProducts()">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="priceTable">
+                <thead>
+                    <tr>
+                        <th class="item-col">Item #</th>
+                        <th>Product Name</th>
+                        <th class="price-col">Price (SGD)</th>
+                        <th class="qty-col">Quantity</th>
+                        <th class="total-col">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="5" class="loading">Loading products...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // USANA Products Data
+        const USANA_PRODUCTS = [
+  {
+    "item": "167",
+    "name": "USANA Energy Kit — USANA 活力套装 (U.P $603) - 1 x CellSentials, 1 x BiOmega, 2 x MagneCal D, 1x CoQuinone 100, 1x Proflavanol C100, 4x Probiotic Powder, Nutrition Pouch (56 Sachets)",
+    "price": 540.0
+  },
+  {
+    "item": "497",
+    "name": "Celavive Starter Kit — Celavive 启动套组 (U.P $630) - 1 x Triple Action Eye Cream, 1 x Vitalizing Serum, 1 x Resurfacing Serum, 1x Contouring Face & Neck Crème, 1x Collagen Peptide",
+    "price": 500.0
+  },
+  {
+    "item": "669",
+    "name": "Bi-Phase Makeup Remover Twin Pack - 深层滋养卸妆液套组 (U.P $70) - 2 x Bi-Phase makeup remover",
+    "price": 75.0
+  },
+  {
+    "item": "670",
+    "name": "Creamy Foam Cleanser Twin Pack - 泡沫洁面乳套组 (U.P $84) - 2 x Creamy Foam Cleanser",
+    "price": 75.0
+  },
+  {
+    "item": "671",
+    "name": "Perfecting Toner Twin Pack - 水润调理美颜露套组 (U.P $124) - 2 x Perfecting Toner",
+    "price": 122.0
+  },
+  {
+    "item": "677",
+    "name": "Contouring Face & Neck Crème Special - 紧致美颜霜特惠 (U.P $135) - 1 x Contouring Face & Neck Crème",
+    "price": 121.0
+  },
+  {
+    "item": "678",
+    "name": "Triple Action Eye Cream Special - 淡纹紧致眼霜特惠 (U.P $130) - 1 x Triple Action Eye Cream",
+    "price": 117.0
+  },
+  {
+    "item": "682",
+    "name": "Serum Pack - 精华套组 (U.P $310) - 1 x Vitalizing Serum, 1 x Resurfacing Serum",
+    "price": 279.0
+  },
+  {
+    "item": "101",
+    "name": "CellSentials — 细胞基本营养素 (112 tablets Core Minerals, 112 tablets Vita Antioxidant)",
+    "price": 105.0
+  },
+  {
+    "item": "105",
+    "name": "Usanimals — 儿童营养素 (56 tablets)",
+    "price": 30.0
+  },
+  {
+    "item": "110",
+    "name": "Proflavanol C100 — 葡萄籽精华C100 (56 tablets)",
+    "price": 82.0
+  },
+  {
+    "item": "120",
+    "name": "MagneCal D — 活力钙镁D片 (112 tablets)",
+    "price": 39.0
+  },
+  {
+    "item": "122",
+    "name": "BiOmega — 活力奥米加 (56 capsules)",
+    "price": 48.0
+  },
+  {
+    "item": "123",
+    "name": "CoQuinone 30 — 脏力宝 30 (56 soft gel capsules)",
+    "price": 80.0
+  },
+  {
+    "item": "142",
+    "name": "CoQuinone 100 — 脏力宝 100 (56 soft gel capsules)",
+    "price": 110.0
+  },
+  {
+    "item": "126",
+    "name": "CopaPrime+ — 锐知宝 (56 tablets)",
+    "price": 65.0
+  },
+  {
+    "item": "128",
+    "name": "Palmetto Plus — 保列健 (30 soft gel capsules)",
+    "price": 69.0
+  },
+  {
+    "item": "129",
+    "name": "EstroPro — 妇安宝 (56 tablets)",
+    "price": 45.0
+  },
+  {
+    "item": "131",
+    "name": "Procosa — 健胳宁 (84 tablets)",
+    "price": 66.0
+  },
+  {
+    "item": "113",
+    "name": "Visionex DS — 视力宝 DS (28 tablets)",
+    "price": 65.0
+  },
+  {
+    "item": "143",
+    "name": "Booster C 600 — 维特C 600 (28 sticks)",
+    "price": 66.0
+  },
+  {
+    "item": "147",
+    "name": "Metabolism+ — 活力代谢+ (84 tablets)",
+    "price": 54.0
+  },
+  {
+    "item": "146",
+    "name": "Proglucamune — 灵芝菌丝体精华 (56 tablets)",
+    "price": 80.0
+  },
+  {
+    "item": "109",
+    "name": "Vitamin D — 维生素 D (56 tablets)",
+    "price": 34.0
+  },
+  {
+    "item": "115",
+    "name": "Mind + Body Balance — 舒心宁片 (56 tablets)",
+    "price": 43.0
+  },
+  {
+    "item": "108",
+    "name": "USANA Probiotic — 超级益生菌 (14 sticks)",
+    "price": 45.0
+  },
+  {
+    "item": "111",
+    "name": "Digestive Enzyme — 消化酵素 (56 tablets)",
+    "price": 51.0
+  },
+  {
+    "item": "135",
+    "name": "Hepasil DTX — 肝脏宝 (84 tablets)",
+    "price": 69.0
+  },
+  {
+    "item": "201",
+    "name": "Detox Tea Drink — 排毒茶饮 (28 sticks)",
+    "price": 35.0
+  },
+  {
+    "item": "224",
+    "name": "Fibergy Active — 活力纤维素 (28 servings)",
+    "price": 48.0
+  },
+  {
+    "item": "259",
+    "name": "Nutrimeal Active, Chocolate — 活力营养餐巧克力口味 (14 sachets)",
+    "price": 80.0
+  },
+  {
+    "item": "255",
+    "name": "Nutrimeal Active, Vanilla — 活力营养餐奶油香草口味 (14 sachets)",
+    "price": 80.0
+  },
+  {
+    "item": "938",
+    "name": "Botanical Beverage Cranberry w/Collagen Peptide - 胶原蛋白肽蔓越莓饮 (14 pouches)",
+    "price": 55.0
+  },
+  {
+    "item": "398",
+    "name": "Whitening Toothpaste — 亮白牙膏 (113 g)",
+    "price": 12.0
+  },
+  {
+    "item": "330",
+    "name": "Conditioning Makeup Remover — 净颜调理卸妆液 (200 mL)",
+    "price": 42.0
+  },
+  {
+    "item": "348",
+    "name": "Bi-Phase Makeup Remover — 深层滋养卸妆液 (200 mL)",
+    "price": 42.0
+  },
+  {
+    "item": "333",
+    "name": "Creamy Foam Cleanser — 泡沫洁面乳 (79.4 g)",
+    "price": 42.0
+  },
+  {
+    "item": "331",
+    "name": "Perfecting Toner — 水润调理美颜露 (120 mL)",
+    "price": 68.0
+  },
+  {
+    "item": "339",
+    "name": "Vitalizing Serum — 全效活肤精华 (50 g)",
+    "price": 155.0
+  },
+  {
+    "item": "347",
+    "name": "Triple Action Eye Cream — 淡纹紧致眼霜 (14.2 g)",
+    "price": 130.0
+  },
+  {
+    "item": "342",
+    "name": "Hydrating + Lifting Sheet Mask — 深层保湿紧致面膜 (3 pcs)",
+    "price": 36.0
+  },
+  {
+    "item": "345",
+    "name": "Radiant Facial Oil — 焕颜光采护肤油 (30 mL)",
+    "price": 90.0
+  },
+  {
+    "item": "334",
+    "name": "Protective Day Lotion — 水润防晒乳液 (30 mL)",
+    "price": 60.0
+  },
+  {
+    "item": "335",
+    "name": "Protective Day Cream — 水润防晒日霜 (28 g)",
+    "price": 60.0
+  },
+  {
+    "item": "358",
+    "name": "Contouring Face & Neck Crème — 紧致美颜霜 (50 g)",
+    "price": 135.0
+  },
+  {
+    "item": "341",
+    "name": "Exfoliating Scrub + Mask — 深层净致磨砂面膜 (80 g)",
+    "price": 39.0
+  },
+  {
+    "item": "366",
+    "name": "Postbiotic Barrier Balm — 后生元修护霜 (64 mL)",
+    "price": 50.0
+  },
+  {
+    "item": "367",
+    "name": "Postbiotic Rescue Serum — 后生元镇静调理精华 (50 mL)",
+    "price": 66.0
+  },
+  {
+    "item": "368",
+    "name": "Postbiotic Calming Cleanser — 后生元舒缓洁面乳 (100 mL)",
+    "price": 44.0
+  },
+  {
+    "item": "369",
+    "name": "Postbiotic Soothing Moisturizer — 后生元舒缓保湿霜 (50 mL)",
+    "price": 60.0
+  },
+  {
+    "item": "355",
+    "name": "Resurfacing Serum — 净透焕肤精华 (50 mL)",
+    "price": 155.0
+  },
+  {
+    "item": "500",
+    "name": "TrueHealth and TrueWealth Brochure (1 Pack, 4s) — 真正健康 & 真正财富传单 (1包 － 4份)",
+    "price": 5.0
+  },
+  {
+    "item": "824",
+    "name": "Business Accelerator Suite (4 Weeks) — 事业加速升级组合 (每四星期) - Team Manager, Your Personal Website and web email",
+    "price": 26.0
+  },
+  {
+    "item": "828",
+    "name": "Web eMail (4 weeks) — 电邮信箱 (每四星期)",
+    "price": 6.25
+  },
+  {
+    "item": "799",
+    "name": "USANA Non Woven Bag — USANA 无纺布袋 (Single/1个)",
+    "price": 1.5
+  },
+  {
+    "item": "799-10",
+    "name": "USANA Non Woven Bag — USANA 无纺布袋 (10pc/10个)",
+    "price": 14.0
+  },
+  {
+    "item": "763",
+    "name": "Celavive Draw String Pouch (Single) — Celavive 束口袋 (1个)",
+    "price": 6.0
+  },
+  {
+    "item": "763-5",
+    "name": "Celavive Draw String Pouch — Celavive 束口袋 (5pc/5个)",
+    "price": 20.0
+  },
+  {
+    "item": "752-P",
+    "name": "SG Pink Blender Bottle — 粉色摇摇杯",
+    "price": 14.0
+  },
+  {
+    "item": "752-B",
+    "name": "SG Blue Blender Bottle — 蓝色摇摇杯",
+    "price": 14.0
+  },
+  {
+    "item": "752-BK",
+    "name": "SG Black Steel BlenderBottle® — 不锈钢转型摇摇杯 - 黑色",
+    "price": 38.0
+  },
+  {
+    "item": "752-BM",
+    "name": "SG Blender Bottle - Black/Mint — 黑色摇摇杯",
+    "price": 20.0
+  },
+  {
+    "item": "714",
+    "name": "SG Celavive Mini Sampling Bottles — Celavive 迷你试用瓶装",
+    "price": 3.5
+  },
+  {
+    "item": "762",
+    "name": "Nutrition Pouch (56 pcs) — 营养随身装 (56个)",
+    "price": 5.0
+  }
+];
+
+        let productsData = [];
+        let allProducts = [];
+
+        // Initialize
+        window.onload = function() {
+            loadProducts();
+        };
+
+        function loadProducts() {
+            allProducts = USANA_PRODUCTS.map((product, index) => ({
+                id: index,
+                item: product.item,
+                name: product.name,
+                price: product.price,
+                quantity: 0
+            }));
+
+            productsData = [...allProducts];
+            displayPricelist();
+        }
+
+        function displayPricelist() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            if (productsData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" class="no-results">No products found</td></tr>';
+                return;
+            }
+
+            productsData.forEach(product => {
+                const row = document.createElement('tr');
+                row.dataset.productId = product.id;
+                row.innerHTML = `
+                    <td class="item-number">${product.item}</td>
+                    <td class="product-name">${product.name}</td>
+                    <td class="price">$${product.price.toFixed(2)}</td>
+                    <td style="text-align: center;">
+                        <input type="number" 
+                               class="qty-input" 
+                               value="0" 
+                               min="0" 
+                               data-id="${product.id}"
+                               onchange="updateQuantity(${product.id}, this.value)"
+                               onclick="this.select()">
+                    </td>
+                    <td class="subtotal" id="subtotal-${product.id}">$0.00</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            updateGrandTotal();
+        }
+
+        function updateQuantity(id, qty) {
+            const quantity = parseInt(qty) || 0;
+            const product = allProducts.find(p => p.id === id);
+            if (!product) return;
+
+            product.quantity = quantity;
+
+            const subtotal = product.price * quantity;
+            const subtotalEl = document.getElementById(`subtotal-${id}`);
+            const qtyInput = document.querySelector(`input[data-id="${id}"]`);
+            
+            subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+            
+            // Add visual feedback
+            if (quantity > 0) {
+                qtyInput.classList.add('has-value');
+                subtotalEl.classList.add('has-value');
+            } else {
+                qtyInput.classList.remove('has-value');
+                subtotalEl.classList.remove('has-value');
+            }
+
+            // Trigger animation
+            subtotalEl.style.animation = 'none';
+            setTimeout(() => {
+                subtotalEl.style.animation = '';
+            }, 10);
+
+            updateGrandTotal();
+        }
+
+        function updateGrandTotal() {
+            const total = allProducts.reduce((sum, product) => {
+                return sum + (product.price * product.quantity);
+            }, 0);
+
+            document.getElementById('grandTotal').textContent = `$${total.toFixed(2)}`;
+        }
+
+        function resetQuantities() {
+            if (confirm('Are you sure you want to reset all quantities to 0?')) {
+                allProducts.forEach(product => {
+                    product.quantity = 0;
+                });
+
+                document.querySelectorAll('.qty-input').forEach(input => {
+                    input.value = 0;
+                    input.classList.remove('has-value');
+                });
+
+                document.querySelectorAll('.subtotal').forEach(cell => {
+                    cell.textContent = '$0.00';
+                    cell.classList.remove('has-value');
+                });
+
+                updateGrandTotal();
+            }
+        }
+
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                productsData = [...allProducts];
+            } else {
+                productsData = allProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.item.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            displayPricelist();
+        }
+    </script>
+</body>
+</html>
