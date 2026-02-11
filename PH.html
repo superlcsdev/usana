@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USANA Pricelist - Philippines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #003d82 0%, #0066cc 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003d82 0%, #0066cc 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .grand-total-bar {
+            background: linear-gradient(135deg, #003d82 0%, #0052a3 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 2em;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .grand-total-bar .label {
+            font-size: 1em;
+            letter-spacing: 1px;
+        }
+
+        .grand-total-bar .amount {
+            font-size: 1.3em;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .controls-bar {
+            padding: 25px 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .reset-btn {
+            background: #003d82;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 61, 130, 0.3);
+        }
+
+        .reset-btn:hover {
+            background: #002952;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 61, 130, 0.4);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .table-container {
+            padding: 30px 40px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.15em;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #003d82 0%, #0066cc 100%);
+            color: white;
+            position: sticky;
+            top: 95px;
+            z-index: 50;
+        }
+
+        th {
+            padding: 22px 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.15em;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        th:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        th.sortable::after {
+            content: '⇅';
+            margin-left: 8px;
+            opacity: 0.5;
+            font-size: 0.9em;
+        }
+
+        th.sorted-asc::after {
+            content: '▲';
+            opacity: 1;
+        }
+
+        th.sorted-desc::after {
+            content: '▼';
+            opacity: 1;
+        }
+
+        th.item-col {
+            width: 100px;
+            text-align: center;
+        }
+
+        th.points-col {
+            width: 100px;
+            text-align: center;
+        }
+
+        th.qty-col, th.price-col, th.total-col {
+            text-align: center;
+            width: 130px;
+        }
+
+        td {
+            padding: 20px 18px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tbody tr {
+            transition: all 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f0f7ff;
+            transform: scale(1.001);
+        }
+
+        .item-number {
+            text-align: center;
+            font-weight: 700;
+            color: #003d82;
+            font-size: 1.05em;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.05em;
+            line-height: 1.4;
+        }
+
+        .points {
+            text-align: center;
+            font-weight: 700;
+            color: #0066cc;
+            font-size: 1.1em;
+        }
+
+        .qty-input {
+            width: 90px;
+            padding: 14px;
+            font-size: 1.3em;
+            text-align: center;
+            border: 3px solid #e9ecef;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: white;
+        }
+
+        .qty-input:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.15);
+            background: #f0f7ff;
+        }
+
+        .qty-input:hover {
+            border-color: #0066cc;
+        }
+
+        .qty-input.has-value {
+            background: #e6f2ff;
+            border-color: #0066cc;
+        }
+
+        .price, .subtotal {
+            font-weight: 700;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .price {
+            color: #003d82;
+        }
+
+        .subtotal {
+            color: #0066cc;
+            font-size: 1.3em;
+        }
+
+        .subtotal.has-value {
+            animation: pulse 0.3s ease-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 30px;
+            color: #6c757d;
+            font-size: 1.3em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .grand-total-bar {
+                font-size: 1.4em;
+                flex-direction: column;
+                gap: 10px;
+                padding: 20px;
+            }
+
+            .controls-bar {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 1em;
+            }
+
+            th, td {
+                padding: 14px 10px;
+            }
+
+            .qty-input {
+                width: 70px;
+                font-size: 1.1em;
+            }
+
+            .item-col, .points-col {
+                display: none;
+            }
+        }
+
+        .info-banner {
+            background: linear-gradient(135deg, #e6f2ff 0%, #cce5ff 100%);
+            padding: 20px 40px;
+            border-bottom: 2px solid #0066cc;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-banner .icon {
+            font-size: 2em;
+        }
+
+        .info-banner .text {
+            flex: 1;
+            color: #003d82;
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+
+        .info-banner .text strong {
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 USANA Health Sciences</h1>
+            <p>Philippines Pricelist</p>
+            <div class="subtitle">Price effective 3 January 2026</div>
+        </div>
+
+        <div class="info-banner">
+            <div class="icon">💰</div>
+            <div class="text">
+                <strong>Brand Partner Prices shown below.</strong> Subscribe & Save price is 10% less. Recommended Retail Price is 20% more.
+            </div>
+        </div>
+
+        <div class="grand-total-bar">
+            <span class="label">GRAND TOTAL:</span>
+            <span class="amount" id="grandTotal">₱0.00</span>
+        </div>
+
+        <div class="controls-bar">
+            <button class="reset-btn" onclick="resetQuantities()">🔄 Reset All</button>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search products..." oninput="filterProducts()">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="priceTable">
+                <thead>
+                    <tr>
+                        <th class="item-col sortable" onclick="sortTable('item')">Item #</th>
+                        <th class="sortable" onclick="sortTable('name')">Product Name</th>
+                        <th class="points-col sortable" onclick="sortTable('points')">Points</th>
+                        <th class="price-col sortable" onclick="sortTable('price')">Price (PHP)</th>
+                        <th class="qty-col">Quantity</th>
+                        <th class="total-col sortable" onclick="sortTable('subtotal')">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // USANA Products Data - Philippines
+        const USANA_PRODUCTS = [
+  {
+    "item": "101",
+    "name": "CellSentials",
+    "points": 34,
+    "price": 3690.0
+  },
+  {
+    "item": "101",
+    "name": "Mini CellSentials",
+    "points": 7,
+    "price": 1110.0
+  },
+  {
+    "item": "105",
+    "name": "Usanimals",
+    "points": 8,
+    "price": 1400.0
+  },
+  {
+    "item": "108",
+    "name": "USANA Probiotic",
+    "points": 10,
+    "price": 1700.0
+  },
+  {
+    "item": "110",
+    "name": "Proflavanol C100",
+    "points": 30,
+    "price": 3100.0
+  },
+  {
+    "item": "111",
+    "name": "Digestive Enzyme",
+    "points": 14,
+    "price": 1680.0
+  },
+  {
+    "item": "115",
+    "name": "ProCalm+",
+    "points": 12,
+    "price": 1680.0
+  },
+  {
+    "item": "120",
+    "name": "MagneCal D",
+    "points": 15,
+    "price": 1950.0
+  },
+  {
+    "item": "122",
+    "name": "BiOmega",
+    "points": 14,
+    "price": 2250.0
+  },
+  {
+    "item": "123",
+    "name": "CoQuinone 30",
+    "points": 32,
+    "price": 3420.0
+  },
+  {
+    "item": "126",
+    "name": "CopaPrime+",
+    "points": 20,
+    "price": 2580.0
+  },
+  {
+    "item": "128",
+    "name": "Palmetto Plus",
+    "points": 17,
+    "price": 2730.0
+  },
+  {
+    "item": "130",
+    "name": "Poly C",
+    "points": 10,
+    "price": 1600.0
+  },
+  {
+    "item": "131",
+    "name": "Procosa",
+    "points": 19,
+    "price": 2580.0
+  },
+  {
+    "item": "134",
+    "name": "Visionex",
+    "points": 25,
+    "price": 2730.0
+  },
+  {
+    "item": "135",
+    "name": "Hepasil DTX",
+    "points": 24,
+    "price": 2940.0
+  },
+  {
+    "item": "141",
+    "name": "Pure Rest SF",
+    "points": 8,
+    "price": 1160.0
+  },
+  {
+    "item": "146",
+    "name": "Proglucamune",
+    "points": 15,
+    "price": 2200.0
+  },
+  {
+    "item": "156",
+    "name": "USANA Advanced Collagen",
+    "points": 12,
+    "price": 2100.0
+  },
+  {
+    "item": "210",
+    "name": "Nutrimeal Dutch Chocolate",
+    "points": 12,
+    "price": 1950.0
+  },
+  {
+    "item": "211",
+    "name": "Nutrimeal French Vanilla",
+    "points": 12,
+    "price": 1950.0
+  },
+  {
+    "item": "212",
+    "name": "Nutrimeal Wild Strawberry",
+    "points": 12,
+    "price": 1950.0
+  },
+  {
+    "item": "147",
+    "name": "Active+ Supplement",
+    "points": 15,
+    "price": 1950.0
+  },
+  {
+    "item": "201",
+    "name": "USANA DTX Tea Mix",
+    "points": 8,
+    "price": 1530.0
+  },
+  {
+    "item": "224",
+    "name": "Fibergy Active",
+    "points": 14,
+    "price": 1850.0
+  },
+  {
+    "item": "270",
+    "name": "Nutrimeal + Soy Chocolate",
+    "points": 15,
+    "price": 2790.0
+  },
+  {
+    "item": "271",
+    "name": "Nutrimeal + Soy Vanilla",
+    "points": 15,
+    "price": 2790.0
+  },
+  {
+    "item": "333",
+    "name": "Creamy Foam Cleanser",
+    "points": 14,
+    "price": 1890.0
+  },
+  {
+    "item": "348",
+    "name": "Bi-Phase Makeup Remover",
+    "points": 14,
+    "price": 1800.0
+  },
+  {
+    "item": "331",
+    "name": "Perfecting Toner",
+    "points": 14,
+    "price": 2000.0
+  },
+  {
+    "item": "339",
+    "name": "Vitalizing Serum",
+    "points": 60,
+    "price": 5500.0
+  },
+  {
+    "item": "355",
+    "name": "Resurfacing Serum",
+    "points": 60,
+    "price": 5500.0
+  },
+  {
+    "item": "347",
+    "name": "Triple Action Eye Cream",
+    "points": 55,
+    "price": 5000.0
+  },
+  {
+    "item": "334",
+    "name": "Protective Day Lotion",
+    "points": 16,
+    "price": 2000.0
+  },
+  {
+    "item": "335",
+    "name": "Protective Day Cream",
+    "points": 16,
+    "price": 2000.0
+  },
+  {
+    "item": "358",
+    "name": "Contouring Face & Neck Crème",
+    "points": 55,
+    "price": 5000.0
+  },
+  {
+    "item": "341",
+    "name": "Exfoliating Charcoal Facial Mask + Scrub",
+    "points": 10,
+    "price": 1580.0
+  },
+  {
+    "item": "342",
+    "name": "Hydrating + Lifting Sheet Mask",
+    "points": 9,
+    "price": 1260.0
+  },
+  {
+    "item": "344",
+    "name": "Luminous Moisture Cream",
+    "points": 22,
+    "price": 2310.0
+  },
+  {
+    "item": "366",
+    "name": "Postbiotic Barrier Balm",
+    "points": 18,
+    "price": 1950.0
+  },
+  {
+    "item": "367",
+    "name": "Postbiotic Rescue Serum",
+    "points": 24,
+    "price": 2400.0
+  },
+  {
+    "item": "368",
+    "name": "Postbiotic Calming Cleanser",
+    "points": 19,
+    "price": 2100.0
+  },
+  {
+    "item": "369",
+    "name": "Postbiotic Soothing Moisturizer",
+    "points": 19,
+    "price": 2300.0
+  },
+  {
+    "item": "670",
+    "name": "Creamy Foam Cleanser Twin Pack",
+    "points": 25,
+    "price": 3400.0
+  },
+  {
+    "item": "669",
+    "name": "Bi-Phase Makeup Remover Twin Pack",
+    "points": 25,
+    "price": 3240.0
+  },
+  {
+    "item": "648",
+    "name": "Protective Day Lotion Twin Pack",
+    "points": 30,
+    "price": 3600.0
+  },
+  {
+    "item": "649",
+    "name": "Protective Day Cream Twin Pack",
+    "points": 30,
+    "price": 3600.0
+  },
+  {
+    "item": "342",
+    "name": "Hydrating + Lifting Sheet Mask Twin Pack",
+    "points": 16,
+    "price": 2260.0
+  },
+  {
+    "item": "647",
+    "name": "Luminous Moisture Cream Twin Pack",
+    "points": 42,
+    "price": 4150.0
+  },
+  {
+    "item": "677",
+    "name": "Contouring Face & Neck Crème (Discounted)",
+    "points": 48,
+    "price": 4500.0
+  },
+  {
+    "item": "678",
+    "name": "Triple Action Eye Cream (Discounted)",
+    "points": 48,
+    "price": 4500.0
+  },
+  {
+    "item": "679",
+    "name": "Vitalizing Serum (Discounted)",
+    "points": 52,
+    "price": 4950.0
+  },
+  {
+    "item": "680",
+    "name": "Resurfacing Serum (Discounted)",
+    "points": 52,
+    "price": 4950.0
+  },
+  {
+    "item": "398",
+    "name": "Whitening Toothpaste",
+    "points": 3,
+    "price": 480.0
+  },
+  {
+    "item": "450",
+    "name": "Business Development System",
+    "points": 0,
+    "price": 990.0
+  },
+  {
+    "item": "719",
+    "name": "Laminated Shopping Bag (small)",
+    "points": 0,
+    "price": 20.0
+  },
+  {
+    "item": "719",
+    "name": "Laminated Shopping Bag (medium)",
+    "points": 0,
+    "price": 30.0
+  },
+  {
+    "item": "719",
+    "name": "Laminated Shopping Bag (large)",
+    "points": 0,
+    "price": 45.0
+  },
+  {
+    "item": "752",
+    "name": "Blender Bottle (small)",
+    "points": 0,
+    "price": 150.0
+  },
+  {
+    "item": "752",
+    "name": "Blender Bottle (big)",
+    "points": 0,
+    "price": 250.0
+  },
+  {
+    "item": "752",
+    "name": "USANA Shaker Bottle",
+    "points": 0,
+    "price": 250.0
+  },
+  {
+    "item": "752",
+    "name": "USANA Shaker Bottle (Hot Pink)",
+    "points": 0,
+    "price": 250.0
+  },
+  {
+    "item": "752",
+    "name": "USANA Shaker Bottle (Lime Green)",
+    "points": 0,
+    "price": 250.0
+  },
+  {
+    "item": "752",
+    "name": "USANA Shaker Bottle (Yellow)",
+    "points": 0,
+    "price": 250.0
+  },
+  {
+    "item": "752",
+    "name": "USANA Shaker Bottle (Purple)",
+    "points": 0,
+    "price": 250.0
+  },
+  {
+    "item": "752",
+    "name": "USANA Shaker Bottle (Orange)",
+    "points": 0,
+    "price": 250.0
+  },
+  {
+    "item": "769",
+    "name": "USANA Pill Box (Lilac)",
+    "points": 0,
+    "price": 160.0
+  },
+  {
+    "item": "799",
+    "name": "USANA Zip Bag (small)",
+    "points": 0,
+    "price": 80.0
+  },
+  {
+    "item": "799",
+    "name": "USANA Zip Bag (big)",
+    "points": 0,
+    "price": 100.0
+  }
+];
+
+        let productsData = [];
+        let allProducts = [];
+        let currentSort = { column: null, ascending: true };
+
+        // Initialize
+        window.onload = function() {
+            loadProducts();
+        };
+
+        function loadProducts() {
+            allProducts = USANA_PRODUCTS.map((product, index) => ({
+                id: index,
+                item: product.item,
+                name: product.name,
+                points: product.points,
+                price: product.price,
+                quantity: 0
+            }));
+
+            productsData = [...allProducts];
+            displayPricelist();
+        }
+
+        function displayPricelist() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            if (productsData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="no-results">No products found</td></tr>';
+                return;
+            }
+
+            productsData.forEach(product => {
+                const row = document.createElement('tr');
+                row.dataset.productId = product.id;
+                row.innerHTML = `
+                    <td class="item-number">${product.item}</td>
+                    <td class="product-name">${product.name}</td>
+                    <td class="points">${product.points}</td>
+                    <td class="price">₱${product.price.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td style="text-align: center;">
+                        <input type="number" 
+                               class="qty-input" 
+                               value="0" 
+                               min="0" 
+                               data-id="${product.id}"
+                               onchange="updateQuantity(${product.id}, this.value)"
+                               onclick="this.select()">
+                    </td>
+                    <td class="subtotal" id="subtotal-${product.id}">₱0.00</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            updateGrandTotal();
+        }
+
+        function updateQuantity(id, qty) {
+            const quantity = parseInt(qty) || 0;
+            const product = allProducts.find(p => p.id === id);
+            if (!product) return;
+
+            product.quantity = quantity;
+
+            const subtotal = product.price * quantity;
+            const subtotalEl = document.getElementById(`subtotal-${id}`);
+            const qtyInput = document.querySelector(`input[data-id="${id}"]`);
+            
+            subtotalEl.textContent = `₱${subtotal.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            // Add visual feedback
+            if (quantity > 0) {
+                qtyInput.classList.add('has-value');
+                subtotalEl.classList.add('has-value');
+            } else {
+                qtyInput.classList.remove('has-value');
+                subtotalEl.classList.remove('has-value');
+            }
+
+            // Trigger animation
+            subtotalEl.style.animation = 'none';
+            setTimeout(() => {
+                subtotalEl.style.animation = '';
+            }, 10);
+
+            updateGrandTotal();
+        }
+
+        function updateGrandTotal() {
+            const total = allProducts.reduce((sum, product) => {
+                return sum + (product.price * product.quantity);
+            }, 0);
+
+            document.getElementById('grandTotal').textContent = `₱${total.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        function resetQuantities() {
+            if (confirm('Are you sure you want to reset all quantities to 0?')) {
+                allProducts.forEach(product => {
+                    product.quantity = 0;
+                });
+
+                document.querySelectorAll('.qty-input').forEach(input => {
+                    input.value = 0;
+                    input.classList.remove('has-value');
+                });
+
+                document.querySelectorAll('.subtotal').forEach(cell => {
+                    cell.textContent = '₱0.00';
+                    cell.classList.remove('has-value');
+                });
+
+                updateGrandTotal();
+            }
+        }
+
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                productsData = [...allProducts];
+            } else {
+                productsData = allProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.item.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            displayPricelist();
+        }
+
+        function sortTable(column) {
+            // Update sort direction
+            if (currentSort.column === column) {
+                currentSort.ascending = !currentSort.ascending;
+            } else {
+                currentSort.column = column;
+                currentSort.ascending = true;
+            }
+
+            // Remove all sort classes
+            document.querySelectorAll('th').forEach(th => {
+                th.classList.remove('sorted-asc', 'sorted-desc');
+            });
+
+            // Add sort class to current column
+            const headerMap = {
+                'item': 0,
+                'name': 1,
+                'points': 2,
+                'price': 3,
+                'subtotal': 5
+            };
+            
+            const thIndex = headerMap[column];
+            const th = document.querySelectorAll('th')[thIndex];
+            th.classList.add(currentSort.ascending ? 'sorted-asc' : 'sorted-desc');
+
+            // Sort the data
+            productsData.sort((a, b) => {
+                let valA, valB;
+
+                if (column === 'subtotal') {
+                    valA = a.price * a.quantity;
+                    valB = b.price * b.quantity;
+                } else if (column === 'item') {
+                    // Sort item numbers numerically
+                    valA = parseInt(a.item.replace(/[^\d]/g, '')) || 0;
+                    valB = parseInt(b.item.replace(/[^\d]/g, '')) || 0;
+                } else if (column === 'name') {
+                    valA = a[column].toLowerCase();
+                    valB = b[column].toLowerCase();
+                    return currentSort.ascending 
+                        ? valA.localeCompare(valB)
+                        : valB.localeCompare(valA);
+                } else {
+                    valA = a[column];
+                    valB = b[column];
+                }
+
+                if (currentSort.ascending) {
+                    return valA - valB;
+                } else {
+                    return valB - valA;
+                }
+            });
+
+            displayPricelist();
+        }
+    </script>
+</body>
+</html>
