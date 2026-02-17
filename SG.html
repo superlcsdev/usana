@@ -84,6 +84,37 @@
             flex-wrap: wrap;
         }
 
+        .filter-options {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #003d82;
+        }
+
+        .checkbox-container label {
+            font-size: 1.05em;
+            color: #2c3e50;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
         .reset-btn {
             background: #003d82;
             color: white;
@@ -321,6 +352,17 @@
                 width: 100%;
             }
 
+            .filter-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                margin-top: 10px;
+            }
+
+            .checkbox-container label {
+                font-size: 0.95em;
+            }
+
             table {
                 font-size: 0.85em;
             }
@@ -419,6 +461,16 @@
             <button class="reset-btn" onclick="resetQuantities()">🔄 Reset All</button>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="🔍 Search products..." oninput="filterProducts()">
+            </div>
+            <div class="filter-options">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="hideZeroPoints" checked onchange="applyFilters()">
+                    <label for="hideZeroPoints">Hide zero-point products</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="hideZeroQty" onchange="applyFilters()">
+                    <label for="hideZeroQty">Hide zero quantities</label>
+                </div>
             </div>
         </div>
 
@@ -903,6 +955,11 @@
             }, 10);
 
             updateGrandTotal();
+            
+            // Re-apply filters to update visibility if "Hide zero quantities" is checked
+            if (document.getElementById('hideZeroQty').checked) {
+                applyFilters();
+            }
         }
 
         function updateGrandTotal() {
@@ -934,15 +991,31 @@
         }
 
         function filterProducts() {
+            applyFilters();
+        }
+
+        function applyFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const hideZeroPoints = document.getElementById('hideZeroPoints').checked;
+            const hideZeroQty = document.getElementById('hideZeroQty').checked;
             
-            if (searchTerm === '') {
+            if (searchTerm === '' && !hideZeroPoints && !hideZeroQty) {
                 productsData = [...allProducts];
             } else {
-                productsData = allProducts.filter(product => 
-                    product.name.toLowerCase().includes(searchTerm) ||
-                    product.item.toLowerCase().includes(searchTerm)
-                );
+                productsData = allProducts.filter(product => {
+                    // Search filter
+                    const matchesSearch = searchTerm === '' || 
+                        product.name.toLowerCase().includes(searchTerm) ||
+                        product.item.toLowerCase().includes(searchTerm);
+                    
+                    // Zero points filter
+                    const matchesPoints = !hideZeroPoints || product.points > 0;
+                    
+                    // Zero quantity filter
+                    const matchesQty = !hideZeroQty || product.quantity > 0;
+                    
+                    return matchesSearch && matchesPoints && matchesQty;
+                });
             }
             
             displayPricelist();
