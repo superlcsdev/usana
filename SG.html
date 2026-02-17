@@ -61,17 +61,74 @@
             font-size: 2em;
             font-weight: 700;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            gap: 30px;
         }
 
-        .grand-total-bar .label {
-            font-size: 1em;
+        .total-points {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .total-points .label {
+            font-size: 0.5em;
+            opacity: 0.9;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .total-points .amount {
+            font-size: 0.8em;
             letter-spacing: 1px;
         }
 
-        .grand-total-bar .amount {
-            font-size: 1.3em;
+        .grand-total {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .grand-total .label {
+            font-size: 0.5em;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .grand-total .amount {
+            font-size: 1em;
             letter-spacing: 2px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .signup-banner {
+            background: linear-gradient(135deg, #e6f2ff 0%, #cce5ff 100%);
+            padding: 20px 40px;
+            text-align: center;
+            border-bottom: 2px solid #0066cc;
+        }
+
+        .signup-banner p {
+            color: #003d82;
+            font-size: 1.15em;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .signup-link {
+            color: #0066cc;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            padding-bottom: 2px;
+        }
+
+        .signup-link:hover {
+            border-bottom-color: #0066cc;
+            color: #003d82;
         }
 
         .controls-bar {
@@ -334,8 +391,30 @@
             .grand-total-bar {
                 font-size: 1.2em;
                 flex-direction: column;
-                gap: 10px;
+                gap: 15px;
                 padding: 20px;
+                align-items: center;
+            }
+
+            .total-points {
+                align-items: center;
+                width: 100%;
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+            }
+
+            .grand-total {
+                align-items: center;
+                width: 100%;
+            }
+
+            .signup-banner {
+                padding: 15px 20px;
+            }
+
+            .signup-banner p {
+                font-size: 1em;
             }
 
             .controls-bar {
@@ -453,8 +532,18 @@
         </div>
 
         <div class="grand-total-bar">
-            <span class="label">GRAND TOTAL:</span>
-            <span class="amount" id="grandTotal">$0.00</span>
+            <div class="total-points">
+                <span class="label">Total Points:</span>
+                <span class="amount" id="totalPoints">0</span>
+            </div>
+            <div class="grand-total">
+                <span class="label">GRAND TOTAL:</span>
+                <span class="amount" id="grandTotal">$0.00</span>
+            </div>
+        </div>
+
+        <div class="signup-banner">
+            <p>Ready to start your USANA journey? <a href="https://lawrenceprecious.usana.com/ux/cart/en-SG/surl?shareType=marketingPage&shareId=associate-signup&sponsorId=6621200&shopperSource=pfp" target="_blank" class="signup-link">Sign up here</a></p>
         </div>
 
         <div class="controls-bar">
@@ -970,7 +1059,12 @@
                 return sum + (product.price * product.quantity);
             }, 0);
 
+            const totalPoints = allProducts.reduce((sum, product) => {
+                return sum + (product.points * product.quantity);
+            }, 0);
+
             document.getElementById('grandTotal').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('totalPoints').textContent = totalPoints.toLocaleString();
         }
 
         function resetQuantities() {
