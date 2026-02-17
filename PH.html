@@ -958,6 +958,9 @@
             productsData.forEach(product => {
                 const row = document.createElement('tr');
                 row.dataset.productId = product.id;
+                
+                const subtotal = product.price * product.quantity;
+                
                 row.innerHTML = `
                     <td class="item-number">${product.item}</td>
                     <td class="product-name">${product.name}</td>
@@ -965,14 +968,14 @@
                     <td class="price">₱${product.price.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                     <td style="text-align: center;">
                         <input type="number" 
-                               class="qty-input" 
-                               value="0" 
+                               class="qty-input ${product.quantity > 0 ? 'has-value' : ''}" 
+                               value="${product.quantity}" 
                                min="0" 
                                data-id="${product.id}"
                                onchange="updateQuantity(${product.id}, this.value)"
                                onclick="this.select()">
                     </td>
-                    <td class="subtotal" id="subtotal-${product.id}">₱0.00</td>
+                    <td class="subtotal ${product.quantity > 0 ? 'has-value' : ''}" id="subtotal-${product.id}">₱${subtotal.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                 `;
                 tableBody.appendChild(row);
             });
