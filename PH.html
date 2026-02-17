@@ -60,9 +60,6 @@
             align-items: center;
             font-size: 2em;
             font-weight: 700;
-            position: sticky;
-            top: 0;
-            z-index: 100;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
 
@@ -142,7 +139,7 @@
             background: linear-gradient(135deg, #003d82 0%, #0066cc 100%);
             color: white;
             position: sticky;
-            top: 95px;
+            top: 0;
             z-index: 50;
         }
 
@@ -295,8 +292,16 @@
                 font-size: 2em;
             }
 
+            .header p {
+                font-size: 1.1em;
+            }
+
+            .header .subtitle {
+                font-size: 1em;
+            }
+
             .grand-total-bar {
-                font-size: 1.4em;
+                font-size: 1.2em;
                 flex-direction: column;
                 gap: 10px;
                 padding: 20px;
@@ -304,23 +309,46 @@
 
             .controls-bar {
                 padding: 20px;
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            .reset-btn {
+                width: 100%;
             }
 
             table {
-                font-size: 1em;
+                font-size: 0.9em;
             }
 
             th, td {
-                padding: 14px 10px;
+                padding: 12px 8px;
             }
 
             .qty-input {
-                width: 70px;
-                font-size: 1.1em;
+                width: 60px;
+                padding: 10px;
+                font-size: 1em;
             }
 
-            .item-col, .points-col {
+            .item-col {
                 display: none;
+            }
+
+            .points-col {
+                width: 60px;
+            }
+
+            .product-name {
+                font-size: 0.95em;
+            }
+
+            .price, .subtotal {
+                font-size: 1em;
             }
         }
 
